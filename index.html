@@ -147,7 +147,7 @@ function loadJobs(json,map)
   var standardMarker =[];
 	for (var i = 0; i < json.jobs.length; i++) { 
 		console.log("Datapoint - Longitude: "+json.jobs[i].longitude + "Latitude:" +json.jobs[i].latitude);
-		standardMarker[i] = new nokia.maps.map.StandardMarker([json.jobs[i].longitude,json.jobs[i].latitude]);
+		standardMarker[i] = new nokia.maps.map.StandardMarker([json.jobs[i].latitude,json.jobs[i].longitude]);
 		standardMarker[i].addListener("click",clickHandler(json.jobs[i],standardMarker[i]));
 		map.objects.add(standardMarker[i]); 
 	
