@@ -1,0 +1,12 @@
+{
+
+{
+	_id: uuid,
+	name: "Super Job Offer",
+	position: {
+		longitude: 34.123442,
+		latitude: 86.23234,
+	}
+}
+
+}
