@@ -2,6 +2,7 @@ okay just let's try to use the Nokia Map API,
 for making an App to "Job location visualization" alias jobLocalizer.
 
 Configuration:
+- host on branch project-GitHub-page http://dgrabla.github.com/nokiahere2013
 - As this little program grabs json from the server, the server needs to send this header
  Header set Access-Control-Allow-Origin "*"
 
