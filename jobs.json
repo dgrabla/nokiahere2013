@@ -12,7 +12,8 @@
 		"longitude": 13.7, 
 		"position": "IT Produktmanager",
 		"salary": "60.000", 
-		"url": "http://stellenanzeige.monster.de/Examinierte-Gesundheits-und-Krankenpfleger-m-w-Krankenschwester-in-Berlin-Job-Berlin-Deutschland-117666505.aspx"}
+		"url": "http://stellenanzeige.monster.de/Examinierte-Gesundheits-und-Krankenpfleger-m-w-Krankenschwester-in-Berlin-Job-Berlin-Deutschland-117666505.aspx"
+	},
 	{
 		"latitude": 52.5233, 
 		"longitude": 13.4127, 
@@ -40,11 +41,6 @@
 		"position": "Nurse",
 		"salary": "30.000", 
 		"url": "http://stellenanzeige.monster.de/Java-Entwickler-w-m-Job-Berlin-Berlin-Deutschland-116947494.aspx"
-	},
-
+	}
 	]
 }             
-
-	
-
-
