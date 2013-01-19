@@ -48,22 +48,14 @@
 		<script type="text/javascript" id="exampleJsSource">
 
 function getLocation()
-	  {
-			  if (navigator.geolocation)
-					    {
-								    navigator.geolocation.getCurrentPosition(showPosition);
-					    }
-				  else{console.log("Geolocation is not supported by this browser.");}
-		}
-
-
+{
+ if (navigator.geolocation)
+   {
+ 	    navigator.geolocation.getCurrentPosition(showPosition);
+   }
+ else{console.log("Geolocation is not supported by this browser.");}
+}
 getLocation();
-
-//Now we load our javascript
-$.getJSON('http://www.nokiajobs.com:85/jobs.json', function(response){
-		loadJobs(response);
-})
-
 
 // DGB These are out own APPID and APPToken
 // App id HLnpOLnssqeyh0Rtzn1g
@@ -81,16 +73,20 @@ var mapContainer = document.getElementById("mapContainer");
 // We create a new instance of InfoBubbles bound to a variable so we can call it later on
 var infoBubbles = new nokia.maps.map.component.InfoBubbles();
 
+var json_dataPoints;
 
 
 function showPosition(position)
 {
-  console.log("Latitude: " + position.coords.latitude + " " + "Longitude: " + position.coords.longitude);
-	// Create a map inside the map container DOM node
-	var map = new nokia.maps.map.Display(mapContainer, {
+ 
+ console.log("User Location - Latitude: " + position.coords.latitude + " " + "Longitude: " + position.coords.longitude);
+ // Create a map inside the map container DOM node
+ var map = new nokia.maps.map.Display(mapContainer, {
 		// initial center and zoom level of the map
-		center: [position.coords.longitude,position.coords.latitude],
-		zoomLevel: 10,
+		// DGB 2013-01-19  For some reason this doesn't work
+		center: [position.coords.latitude,position.coords.longitude],
+  //center:  [52.5308213,13.3848798],
+  zoomLevel: 10,
 		components: 
 		[
 			infoBubbles,
@@ -124,43 +120,46 @@ function showPosition(position)
 			new nokia.maps.map.component.ContextMenu()
 		]
 	});
+
+ 
+    //Now we load our javascript
+ 		$.getJSON('http://www.nokiajobs.com:85/jobs.json', function(json){
+				json_datapoints = json;
+				loadJobs(json,map);
+		}) 
+
 }
 
 
 /* Create a marker on a specified geo coordinate 
  * (in this example we use the map's center as our coordinate)
  */
-function loadJobs(json) 
+
+var clickHandler = function (job,marker) {
+	console.log(job.position);
+	infoBubbles.openBubble("<h1>Position: " + job.position + "</h1><br>Click here to visit this <a href='" + job.url +"'>position</a>", marker.coordinate); 	
+};
+
+      
+
+function loadJobs(json,map) 
 {
   var standardMarker =[];
 	for (var i = 0; i < json.jobs.length; i++) { 
-		console.log("datapoint:"+json.jobs[i].longitude);
+		console.log("Datapoint - Longitude: "+json.jobs[i].longitude + "Latitude:" +json.jobs[i].latitude);
 		standardMarker[i] = new nokia.maps.map.StandardMarker([json.jobs[i].longitude,json.jobs[i].latitude]);
+		standardMarker[i].addListener("click",clickHandler(json.jobs[i],standardMarker[i]));
+		map.objects.add(standardMarker[i]); 
+	
 	}
 
 	/* We would like to add event listener on mouse click or finger tap so we check
 	 * nokia.maps.dom.Page.browser.touch which indicates whether the used browser has a touch interface.
 	 */
-	var TOUCH = nokia.maps.dom.Page.browser.touch,
-		CLICK = TOUCH ? "tap" : "click";
 
 	/* Attach an event listener to the newly created marker
 	 * to show info bubble on click of the marker
 	 */
-	/*
-	standardMarker.addListener(
-		CLICK, 
-		function (evt) { 
-			// Set the tail of the bubble to the coordinate of the marker
-		infoBubbles.openBubble("<h1>Super Job</h1><br>Click here to visit this <a href='www.google.com'>Super Job</a>", standardMarker.coordinate);
-		}
-	);
-	 */
-
-	// Next we add the standard marker to the map's object collection so it will be rendered onto the map.
-	for (var i = 0; i < json.jobs.length; i++) { 
-		map.objects.add(standardMarker[i]);
-	}
 
 }
 
