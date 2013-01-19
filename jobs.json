@@ -41,6 +41,34 @@
 		"position": "Nurse",
 		"salary": "30.000", 
 		"url": "http://stellenanzeige.monster.de/Java-Entwickler-w-m-Job-Berlin-Berlin-Deutschland-116947494.aspx"
+	},
+	{
+		"latitude": 52.521123, 
+		"longitude": 13.392334, 
+		"position": "Teacher",
+		"salary": "60.000", 
+		"url": "http://stellenanzeige.monster.de/Engagement-Sales-Manager-m-w-Job-Berlin-Berlin-Deutschland-117336877.aspx"
+	},
+	{
+		"latitude": 52.521123, 
+		"longitude": 13.392334, 
+		"position": "Teacher",
+		"salary": "55.000", 
+		"url": "http://stellenanzeige.monster.de/Engagement-Sales-Manager-m-w-Job-Berlin-Berlin-Deutschland-117336877.aspx"
+	},
+	{
+		"latitude": 52.521123, 
+		"longitude": 13.392334, 
+		"position": "Teacher",
+		"salary": "35.000", 
+		"url": "http://stellenanzeige.monster.de/Engagement-Sales-Manager-m-w-Job-Berlin-Berlin-Deutschland-117336877.aspx"
+	},
+	{
+		"latitude": 52.521123, 
+		"longitude": 13.392334, 
+		"position": "Teacher",
+		"salary": "40.000", 
+		"url": "http://stellenanzeige.monster.de/Engagement-Sales-Manager-m-w-Job-Berlin-Berlin-Deutschland-117336877.aspx"
 	}
 	]
 }             
