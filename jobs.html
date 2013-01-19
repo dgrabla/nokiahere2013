@@ -71,7 +71,7 @@ var infoBubbles = new nokia.maps.map.component.InfoBubbles();
 // Create a map inside the map container DOM node
 var map = new nokia.maps.map.Display(mapContainer, {
 	// initial center and zoom level of the map
-	center: [52.51, 13.4],
+	center: [32, 9.4],
 	zoomLevel: 10,
 	components: 
 	[
@@ -141,10 +141,11 @@ map.objects.add(standardMarker);
 var noteContainer = new NoteContainer({
 	id: "infoBubbleStandardMarkerUi",
 	parent: document.getElementById("uiContainer"),
-	title: "Standard marker with infoBubble",
+	title: "Berlin HERE Hackathon 2013.",
 	content:
-		'<p>Berlin HERE Hackathon 2013.</p>' +
-		'<p>Job location visualization.'
+		'<p>Job location visualization.' 
+		+ '<p>Select your location. ' +
+		'<form><input id="userLocation" type="text"></input></form>'
 });
 
 
