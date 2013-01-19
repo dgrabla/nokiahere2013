@@ -90,8 +90,8 @@ function showPosition(position)
  var map = new nokia.maps.map.Display(mapContainer, {
 		// initial center and zoom level of the map
 		// DGB 2013-01-19  For some reason this doesn't work
-	//	center: [position.coords.latitude,position.coords.longitude],
-  center:  [52.5308213,13.3848798],
+		center: [position.coords.latitude,position.coords.longitude],
+  //center:  [52.5308213,13.3848798],
   zoomLevel: 10,
 		components: 
 		[
@@ -129,8 +129,8 @@ function showPosition(position)
 
  
     //Now we load our javascript
-		//$.getJSON('http://www.davidgrajal.com/nokiahere2013/jobs.json', function(json){
-		$.getJSON('http://www.nokiajobs.com:85/jobs.json', function(json){
+		$.getJSON('http://www.davidgrajal.com/nokiahere2013/jobs.json', function(json){
+		//$.getJSON('http://www.nokiajobs.com:85/jobs.json', function(json){
 				json_datapoints = json;
 				loadJobs(json,map);
 		}) 
