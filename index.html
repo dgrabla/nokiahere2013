@@ -7,7 +7,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=7; IE=EmulateIE9"/>
 		<base href="http://developer.here.net/apiexplorer/examples/api-for-js/information-bubbles/marker-with-information-bubble.html" />
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-		<title>Nokia Maps API Example: Click to open information bubble</title>
+		<title>Super Job Visualization demo</title>
 		<meta name="description" content="How to trigger showing an information bubble on click or touch of a standard marker"/>
 		<meta name="keywords" content="infobubblemarker, map component, bubble"/>
 		<!-- For scaling content for mobile devices, setting the viewport to the width of the device-->
@@ -70,7 +70,13 @@ nokia.Settings.set("authenticationToken", "gBoUkAMoxoqIWfxWA5DuMQ");
 // Get the DOM node to which we will append the map
 var mapContainer = document.getElementById("mapContainer");
 
-// We create a new instance of InfoBubbles bound to a variable so we can call it later on
+
+//var infoBubbles = [];
+//for (i=0; i<20; i++)
+//{
+//	infoBubbles[i]=new nokia.maps.map.component.InfoBubbles();
+//}
+
 var infoBubbles = new nokia.maps.map.component.InfoBubbles();
 
 var json_dataPoints;
@@ -84,8 +90,8 @@ function showPosition(position)
  var map = new nokia.maps.map.Display(mapContainer, {
 		// initial center and zoom level of the map
 		// DGB 2013-01-19  For some reason this doesn't work
-		center: [position.coords.latitude,position.coords.longitude],
-  //center:  [52.5308213,13.3848798],
+	//	center: [position.coords.latitude,position.coords.longitude],
+  center:  [52.5308213,13.3848798],
   zoomLevel: 10,
 		components: 
 		[
@@ -123,7 +129,8 @@ function showPosition(position)
 
  
     //Now we load our javascript
- 		$.getJSON('http://www.davidgrajal.com/nokiahere2013/jobs.json', function(json){
+		//$.getJSON('http://www.davidgrajal.com/nokiahere2013/jobs.json', function(json){
+		$.getJSON('http://www.nokiajobs.com:85/jobs.json', function(json){
 				json_datapoints = json;
 				loadJobs(json,map);
 		}) 
@@ -135,8 +142,8 @@ function showPosition(position)
  * (in this example we use the map's center as our coordinate)
  */
 
-var clickHandler = function (job,marker) {
-	console.log(job.position);
+var clickHandler = function (job,marker,infoBubbles) {
+	console.log("Creating handler for position: " + job.position);
 	infoBubbles.openBubble("<h1>Position: " + job.position + "</h1><br>Click here to visit this <a href='" + job.url +"'>position</a>", marker.coordinate); 	
 };
 
@@ -148,9 +155,24 @@ function loadJobs(json,map)
 	for (var i = 0; i < json.jobs.length; i++) { 
 		console.log("Datapoint - Longitude: "+json.jobs[i].longitude + "Latitude:" +json.jobs[i].latitude);
 		standardMarker[i] = new nokia.maps.map.StandardMarker([json.jobs[i].latitude,json.jobs[i].longitude]);
-		standardMarker[i].addListener("click",clickHandler(json.jobs[i],standardMarker[i]));
+		//standardMarker[i].addListener("click",clickHandler(json.jobs[i],standardMarker[i],infoBubbles));
+		standardMarker[i].addListener("click",(function (a,b,c)
+				{
+					console.log("-----", a.position);
+					return function() {
+				  	clickHandler(a,b,c);
+					}
+				}(json.jobs[i],standardMarker[i],infoBubbles)
+		));
+//
+//		marker.addListener('click', (function(a,b,c){
+//							return function(){
+//										clickHandler(a,b,c);
+//												};
+//													}(i,'a','b')));
+//
+//
 		map.objects.add(standardMarker[i]); 
-	
 	}
 
 	/* We would like to add event listener on mouse click or finger tap so we check
