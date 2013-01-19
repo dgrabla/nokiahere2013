@@ -128,7 +128,7 @@ function showPosition(position)
 	});
 
  
-    //Now we load our javascript
+    //Now we load our javascript. Take care with the address or you will go into the CORS trap
 		$.getJSON('http://www.davidgrajal.com/nokiahere2013/jobs.json', function(json){
 		//$.getJSON('http://www.nokiajobs.com:85/jobs.json', function(json){
 				json_datapoints = json;
@@ -144,7 +144,7 @@ function showPosition(position)
 
 var clickHandler = function (job,marker,infoBubbles) {
 	console.log("Creating handler for position: " + job.position);
-	infoBubbles.openBubble("<h1>Position: " + job.position + "</h1><br>Click here to visit this <a href='" + job.url +"'>position</a>", marker.coordinate); 	
+	infoBubbles.openBubble("<h1>" + job.position + "</h1><br>Salary: " + job.salary + "<br><a href='" + job.url +"'>Click here to apply for this position</a>", marker.coordinate); 	
 };
 
       
