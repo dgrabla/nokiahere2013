@@ -1,74 +1,184 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- 
+	Example from Nokia Maps API Playground, for more information visit http://api.maps.nokia.com
+ -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=7; IE=EmulateIE9"/>
+		<base href="http://developer.here.net/apiexplorer/examples/api-for-js/information-bubbles/marker-with-information-bubble.html" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+		<title>Nokia Maps API Example: Click to open information bubble</title>
+		<meta name="description" content="How to trigger showing an information bubble on click or touch of a standard marker"/>
+		<meta name="keywords" content="infobubblemarker, map component, bubble"/>
+		<!-- For scaling content for mobile devices, setting the viewport to the width of the device-->
+		<meta name=viewport content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<!-- Styling for example container (NoteContainer & Logger)  -->
+		<link rel="stylesheet" type="text/css" href="http://developer.here.net/apiexplorer/examples/templates/js/exampleHelpers.css"/>
+		<!-- By default we add ?with=all to load every package available, it's better to change this parameter to your use case. Options ?with=maps|positioning|places|placesdata|directions|datarendering|all -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<script type="text/javascript" charset="UTF-8" src="http://api.maps.nokia.com/2.2.3/jsl.js?with=all"></script>
+		<!-- JavaScript for example container (NoteContainer & Logger)  -->
+		<script type="text/javascript" charset="UTF-8" src="http://developer.here.net/apiexplorer/examples/templates/js/exampleHelpers.js"></script>
+		<style type="text/css">
+			html {
+				overflow:hidden;
+			}
+			
+			body {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				width: 100%;
+				height: 100%;
+				position: absolute;
+			}
+			
+			#mapContainer {
+				width: 100%;
+				height: 100%;
+				left: 0;
+				top: 0;
+				position: absolute;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="mapContainer"></div>
+		<div id="uiContainer"></div>
+		<script type="text/javascript" id="exampleJsSource">
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Nokiahere2013 : Nokia Here 2013 Hackathon Stuff" />
+function getLocation()
+{
+ if (navigator.geolocation)
+   {
+ 	    navigator.geolocation.getCurrentPosition(showPosition);
+   }
+ else{console.log("Geolocation is not supported by this browser.");}
+}
+getLocation();
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+// DGB These are out own APPID and APPToken
+// App id HLnpOLnssqeyh0Rtzn1g
+// App token n9JF4770E6AOiEJstaGitw
 
-    <title>Nokiahere2013</title>
-  </head>
+// DGB These are the default ID / Token in the nokia developers site
+// App name: Hackaton2013Berlin
+// App url: http://developer.here.net/web/guest/myapps?p_p_id=MyAppsPortlet_WAR_myappsportlet&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_MyAppsPortlet_WAR_myappsportlet_myaction=appInfo&app_id=HLnpOLnssqeyh0Rtzn1g		
+nokia.Settings.set("appId", "_peU-uCkp-j8ovkzFGNU"); 
+nokia.Settings.set("authenticationToken", "gBoUkAMoxoqIWfxWA5DuMQ");
 
-  <body>
+// Get the DOM node to which we will append the map
+var mapContainer = document.getElementById("mapContainer");
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/dgrabla/nokiahere2013">View on GitHub</a>
+// We create a new instance of InfoBubbles bound to a variable so we can call it later on
+var infoBubbles = new nokia.maps.map.component.InfoBubbles();
 
-          <h1 id="project_title">Nokiahere2013</h1>
-          <h2 id="project_tagline">Nokia Here 2013 Hackathon Stuff</h2>
+var json_dataPoints;
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/dgrabla/nokiahere2013/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/dgrabla/nokiahere2013/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <p>okay just let's try to use the Nokia Map API,
-for making an App to "Job location visualization" alias jobLocalizer.</p>
+function showPosition(position)
+{
+ 
+ console.log("User Location - Latitude: " + position.coords.latitude + " " + "Longitude: " + position.coords.longitude);
+ // Create a map inside the map container DOM node
+ var map = new nokia.maps.map.Display(mapContainer, {
+		// initial center and zoom level of the map
+		// DGB 2013-01-19  For some reason this doesn't work
+		center: [position.coords.latitude,position.coords.longitude],
+  //center:  [52.5308213,13.3848798],
+  zoomLevel: 10,
+		components: 
+		[
+			infoBubbles,
+			// ZoomBar provides a UI to zoom the map in & out
+			new nokia.maps.map.component.ZoomBar(), 
+			// We add the behavior component to allow panning / zooming of the map
+			new nokia.maps.map.component.Behavior(),
+			// Creates UI to easily switch between street map satellite and terrain mapview modes
+			new nokia.maps.map.component.TypeSelector(),
+			// Creates a toggle button to show/hide traffic information on the map
+			new nokia.maps.map.component.Traffic(),
+			// Creates a toggle button to show/hide public transport lines on the map
+			new nokia.maps.map.component.PublicTransport(),
+			// Creates a toggle button to enable the distance measurement tool
+			new nokia.maps.map.component.DistanceMeasurement(),
+			// Shows a min-map in the bottom right corner of the map
+			new nokia.maps.map.component.Overview(),
+			/* Shows a scale bar in the bottom right corner of the map depicting
+			 * ratio of a distance on the map to the corresponding distance in the real world
+			 * in either kilometers or miles
+			 */ 
+			new nokia.maps.map.component.ScaleBar(),
+			/* Positioning will show a set "map to my GPS position" UI button
+			 * Note: this component will only be visible if W3C geolocation API
+			 * is supported by the browser and if you agree to share your location.
+			 * If you location can not be found the positioning button will reset
+			 * itself to its initial state
+			 */
+			new nokia.maps.positioning.component.Positioning(),
+			// Add ContextMenu component so we get context menu on right mouse click / long press tap
+			new nokia.maps.map.component.ContextMenu()
+		]
+	});
 
-<p>Starting from an simple example code.</p>
+ 
+    //Now we load our javascript
+ 		$.getJSON('http://www.davidgrajal.com/nokiahere2013/jobs.json', function(json){
+				json_datapoints = json;
+				loadJobs(json,map);
+		}) 
 
-<ul>
-<li>display 100% a Map on Screen</li>
-<li>add functionality like move and zoom the Map, an overlay Info Container</li>
-<li>at first call this page use the location where it called from
+}
 
-<ul>
-<li>by Hardware (GPS-Sensor)</li>
-<li>or a Browser-Geolocalisations detection (HTML5) js code</li>
-</ul>
-</li>
-<li>link to open a textfield for type in an other Citty name and jump to after send</li>
-<li>set a marker on position and center it</li>
-</ul><p>next step</p>
 
-<ul>
-<li>use meteor.com to have a client/server site and a public folder for images css</li>
-<li>setup mongodb</li>
-<li>put json sampledata in DB</li>
-<li>add code read json in the page </li>
-<li>create maker for each dataitem and add an onclick for more info if available</li>
-</ul>
-      </section>
-    </div>
+/* Create a marker on a specified geo coordinate 
+ * (in this example we use the map's center as our coordinate)
+ */
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Nokiahere2013 maintained by <a href="https://github.com/dgrabla">dgrabla</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+var clickHandler = function (job,marker) {
+	console.log(job.position);
+	infoBubbles.openBubble("<h1>Position: " + job.position + "</h1><br>Click here to visit this <a href='" + job.url +"'>position</a>", marker.coordinate); 	
+};
 
-    
+      
 
-  </body>
+function loadJobs(json,map) 
+{
+  var standardMarker =[];
+	for (var i = 0; i < json.jobs.length; i++) { 
+		console.log("Datapoint - Longitude: "+json.jobs[i].longitude + "Latitude:" +json.jobs[i].latitude);
+		standardMarker[i] = new nokia.maps.map.StandardMarker([json.jobs[i].latitude,json.jobs[i].longitude]);
+		standardMarker[i].addListener("click",clickHandler(json.jobs[i],standardMarker[i]));
+		map.objects.add(standardMarker[i]); 
+	
+	}
+
+	/* We would like to add event listener on mouse click or finger tap so we check
+	 * nokia.maps.dom.Page.browser.touch which indicates whether the used browser has a touch interface.
+	 */
+
+	/* Attach an event listener to the newly created marker
+	 * to show info bubble on click of the marker
+	 */
+
+}
+
+
+/* We create a UI notecontainer for example description and controls
+ * NoteContainer is a UI helper function and not part of the Nokia Maps API
+ * See exampleHelpers.js for implementation details 
+ */
+var noteContainer = new NoteContainer({
+	id: "infoBubbleStandardMarkerUi",
+	parent: document.getElementById("uiContainer"),
+	title: "Berlin HERE Hackathon 2013.",
+	content:
+		'<p>Job location visualization.' 
+		+ '<p>Select your location. ' +
+		'<form><input id="userLocation" type="text"></input></form>'
+});
+
+
+		</script>
+	</body>
 </html>
